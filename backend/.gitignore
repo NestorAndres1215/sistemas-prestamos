@@ -1,0 +1,30 @@
+# Carpetas de compilación de todos los proyectos
+**/bin/
+**/obj/
+
+# Archivos de Visual Studio
+.vs/
+*.user
+*.suo
+
+# Variables de entorno y secretos locales
+.env
+.env.*
+!.env.example
+secrets.json
+
+# Logs
+*.log
+logs/
+
+# Certificados y claves privadas
+*.pfx
+*.p12
+*.key
+
+# Sistema operativo
+Thumbs.db
+.DS_Store
+
+# IDE
+.idea/

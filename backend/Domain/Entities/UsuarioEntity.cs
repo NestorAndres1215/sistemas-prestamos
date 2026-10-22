@@ -1,7 +1,6 @@
-
 namespace Domain.Entities;
 
-public class Usuario
+public class UsuarioEntity
 {
     public int Id { get; set; }
 
@@ -9,10 +8,7 @@ public class Usuario
 
     public required string Email { get; set; }
 
-    // Guardar el hash, nunca la contraseña original.
-    public required string PasswordHash { get; set; }
-
-    public string Rol { get; set; } = "ADMIN";
+    public required string Password { get; set; }
 
     public bool Activo { get; set; } = true;
 

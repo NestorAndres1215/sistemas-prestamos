@@ -1,4 +1,5 @@
 
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data;
@@ -10,7 +11,7 @@ public class AppDbContext : DbContext
     {
     }
 
-    public DbSet<Usuario> Usuarios => Set<Usuario>();
+    public DbSet<UsuarioEntity> Usuarios => Set<UsuarioEntity>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

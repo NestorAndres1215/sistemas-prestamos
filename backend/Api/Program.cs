@@ -2,7 +2,6 @@
 using DotNetEnv;
 
 
-using DotNetEnv;
 
 Env.Load();
 

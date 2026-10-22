@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Persistence.Configurations;
 
-public class UsuarioConfiguration : IEntityTypeConfiguration<Usuario>
+public class UsuarioConfiguration : IEntityTypeConfiguration<UsuarioEntity>
 {
-    public void Configure(EntityTypeBuilder<Usuario> builder)
+    public void Configure(EntityTypeBuilder<UsuarioEntity> builder)
     {
         builder.ToTable("usuarios");
 
@@ -37,16 +37,9 @@ public class UsuarioConfiguration : IEntityTypeConfiguration<Usuario>
             .IsUnique();
 
         // Contraseña almacenada como hash
-        builder.Property(u => u.PasswordHash)
+        builder.Property(u => u.Password)
             .HasColumnName("password_hash")
             .HasMaxLength(255)
-            .IsRequired();
-
-        // Rol del usuario
-        builder.Property(u => u.Rol)
-            .HasColumnName("rol")
-            .HasMaxLength(30)
-            .HasDefaultValue("ADMIN")
             .IsRequired();
 
         // Estado de la cuenta

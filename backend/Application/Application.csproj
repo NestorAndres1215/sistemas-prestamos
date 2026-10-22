@@ -7,14 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\" />
-    <Folder Include="Mappers\" />
-    <Folder Include="Exceptions\" />
     <Folder Include="Behaviors\" />
     <Folder Include="Validators\" />
-    <Folder Include="Services\" />
-    <Folder Include="Ports\Repositories\" />
-    <Folder Include="Ports\UseCase\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Domain\Domain.csproj" />
   </ItemGroup>
 
 </Project>

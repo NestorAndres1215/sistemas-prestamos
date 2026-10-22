@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "Domain": {
+      "commandName": "Project"
+    },
+    "Perfil 1": {
+      "commandName": "Project"
+    },
+    "Perfil 2": {
+      "commandName": "Executable"
+    }
+  }
+}

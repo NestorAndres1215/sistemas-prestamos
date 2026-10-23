@@ -1,11 +1,10 @@
-
-using Application.DTOs.Auth;
+using Application.DTOs.Usuario;
 
 namespace Application.Validators;
 
 public static class UsuarioValidators
 {
-    public static List<string> ValidateRegister(RegisterUsuarioRequest request)
+    public static List<string> ValidateRegister(RegistroUsuarioRequest request)
     {
         var errors = new List<string>();
 

@@ -21,33 +21,7 @@ public class UsuarioRepositoryAdapter : IUsuarioRepository
         _queries = queries;
     }
 
-    public async Task<UsuarioModel?> GetByIdAsync(int id)
-    {
-        var usuario = await _repository.GetByIdAsync(id);
-
-        return usuario is null
-            ? null
-            : UsuarioMapperPersistence.ToModel(usuario);
-    }
-
-    public async Task<UsuarioModel?> GetByEmailAsync(string email)
-    {
-        var usuario = await _repository.GetByEmailAsync(email);
-
-        return usuario is null
-            ? null
-            : UsuarioMapperPersistence.ToModel(usuario);
-    }
-
-    public async Task<UsuarioModel?> GetByUsernameAsync(
-        string username)
-    {
-        var usuario = await _repository.GetByUsernameAsync(username);
-
-        return usuario is null
-            ? null
-            : UsuarioMapperPersistence.ToModel(usuario);
-    }
+    /*
 
     public Task<PagedResult<UsuarioModel>> GetAllAsync(
         int page,
@@ -60,17 +34,11 @@ public class UsuarioRepositoryAdapter : IUsuarioRepository
             pageSize,
             search,
             estado);
-    }
+    }*/
 
     public async Task<UsuarioModel> AddAsync(UsuarioModel usuario)
     {
-        if (string.IsNullOrWhiteSpace(usuario.Password))
-        {
-            throw new ArgumentException(
-                "La contraseña es obligatoria.",
-                nameof(usuario));
-        }
-
+        
         var entity = UsuarioMapperPersistence.ToEntity(usuario);
 
         var creado = await _repository.AddAsync(entity);
@@ -78,26 +46,5 @@ public class UsuarioRepositoryAdapter : IUsuarioRepository
         return UsuarioMapperPersistence.ToModel(creado);
     }
 
-    public async Task<UsuarioModel?> UpdateAsync(UsuarioModel usuario)
-    {
-        var existente = await _repository.GetByIdAsync(usuario.Id);
 
-        if (existente is null)
-        {
-            return null;
-        }
-
-        var entity = UsuarioMapperPersistence.ToEntity(usuario);
-
-        if (string.IsNullOrWhiteSpace(usuario.Password))
-        {
-            entity.Password = existente.Password;
-        }
-
-        var actualizado = await _repository.UpdateAsync(entity);
-
-        return actualizado is null
-            ? null
-            : UsuarioMapperPersistence.ToModel(actualizado);
-    }
 }

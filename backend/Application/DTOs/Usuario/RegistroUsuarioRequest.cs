@@ -1,10 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Application.DTOs.Auth;
 
-public class RegisterUsuarioRequest
+namespace Application.DTOs.Usuario;
+
+public class RegistroUsuarioRequest
 {
     public required string Username { get; set; }
     public required string Email { get; set; }

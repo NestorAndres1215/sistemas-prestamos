@@ -38,7 +38,7 @@ public class UsuarioConfiguration : IEntityTypeConfiguration<UsuarioEntity>
 
         // Contraseña almacenada como hash
         builder.Property(u => u.Password)
-            .HasColumnName("password_hash")
+            .HasColumnName("password")
             .HasMaxLength(255)
             .IsRequired();
 

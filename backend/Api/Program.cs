@@ -1,36 +1,62 @@
 
+using Api.Extensions;
+using Api.Middleware;
 using DotNetEnv;
-
-
 
 Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Registrar servicios
-builder.Services.AddControllers();
+// Database
+builder.Services.AddDatabase(builder.Configuration);
+
+// Authentication & JWT
+builder.Services.AddJwtAuthentication(builder.Configuration);
+
+// Repositories
+builder.Services.AddRepositories();
+
+// Services
+builder.Services.AddApplicationServices();
+
+// Infrastructure
+builder.Services.AddInfrastructureServices();
+
+// Controllers
+builder.Services.AddApiControllers();
+
+// CORS
+builder.Services.AddCorsPolicy();
+
+// Authorization
+builder.Services.AddAuthorization();
+
+// Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Obtener la cadena de conexión desde el .env
-var connectionString =
-    $"Server={Env.GetString("DB_SERVER")};" +
-    $"Port={Env.GetString("DB_PORT")};" +
-    $"Database={Env.GetString("DB_NAME")};" +
-    $"User={Env.GetString("DB_USER")};" +
-    $"Password={Env.GetString("DB_PASSWORD")};";
-
 var app = builder.Build();
 
-// Configurar Swagger UI en desarrollo
+// Swagger
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+// Exception Middleware
+app.UseMiddleware<ExceptionMiddleware>();
+
 app.UseHttpsRedirection();
+
+// CORS
+app.UseCors("AllowAll");
+
+// Authentication & Authorization
+app.UseAuthentication();
 app.UseAuthorization();
+
+// Map Controllers
 app.MapControllers();
 
 app.Run();

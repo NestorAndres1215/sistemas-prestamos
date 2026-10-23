@@ -9,13 +9,22 @@ public static class DatabaseExtensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        var connectionString = configuration
-            .GetConnectionString("DefaultConnection")
-            ?? throw new InvalidOperationException(
-                "La cadena de conexión 'DefaultConnection' no está configurada.");
+        var connectionString =
+            configuration.GetConnectionString("DefaultConnection");
+
+        if (string.IsNullOrWhiteSpace(connectionString))
+        {
+            connectionString =
+                $"Server={Environment.GetEnvironmentVariable("DB_SERVER")};" +
+                $"Port={Environment.GetEnvironmentVariable("DB_PORT")};" +
+                $"Database={Environment.GetEnvironmentVariable("DB_NAME")};" +
+                $"User={Environment.GetEnvironmentVariable("DB_USER")};" +
+                $"Password={Environment.GetEnvironmentVariable("DB_PASSWORD")};";
+        }
 
         services.AddDbContext<AppDbContext>(options =>
-            options.UseMySQL(connectionString));
+            options.UseMySQL(connectionString)
+        );
 
         return services;
     }

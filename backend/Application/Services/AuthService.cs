@@ -1,11 +1,13 @@
+using System.Security.Claims;
 using Application.DTOs.Auth;
+using Application.DTOs.Usuario;
 using Application.Ports.Inbound;
 using Application.Ports.Outbound;
 using Domain.Entities;
 
 namespace Application.Features.Auth.Services;
 
-public class AuthService : IAuthService
+public class AuthService : AuthUseCase
 {
     private readonly IUsuarioRepository _repo;
     private readonly IPasswordHasher _hasher;
@@ -21,12 +23,17 @@ public class AuthService : IAuthService
         _jwt = jwt;
     }
 
+    public Task<UsuarioReponse?> GetCurrentUserFromClaims(ClaimsPrincipal user)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task<AuthResponse> Login(LoginRequest dto)
     {
         throw new NotImplementedException();
     }
 
-    public Task<UsuarioEntity> Register(RegisterUsuarioRequest dto)
+    public Task<UsuarioEntity> Register(RegistroUsuarioRequest dto)
     {
         throw new NotImplementedException();
     }

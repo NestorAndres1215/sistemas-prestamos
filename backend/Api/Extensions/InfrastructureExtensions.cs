@@ -9,9 +9,9 @@ public static class InfrastructureExtensions
     public static IServiceCollection AddInfrastructureServices(
         this IServiceCollection services)
     {
-        services.AddScoped<IPasswordHasher, PasswordHasher>();
+        services.AddScoped<PasswordHasherPort, PasswordHasher>();
 
-        services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+        services.AddScoped<JwtTokenGeneratorPort, JwtTokenGenerator>();
 
         return services;
     }

@@ -7,20 +7,21 @@ using Application.Mappers;
 using Application.Models;
 using Application.Ports.Inbound;
 using Application.Ports.Outbound;
+using Application.Ports.Outbound.Repositories;
 using Application.Validators;
 
 namespace Application.Services;
 
 public class UsuarioService : UsuarioUseCase
 {
-    private readonly IUsuarioRepository _repo;
-    private readonly IPasswordHasher _hasher;
-    private readonly IJwtTokenGenerator _jwt;
+    private readonly UsuarioRepositoryPort _repo;
+    private readonly PasswordHasherPort _hasher;
+    private readonly JwtTokenGeneratorPort _jwt;
 
     public UsuarioService(
-       IUsuarioRepository repo,
-       IPasswordHasher hasher,
-       IJwtTokenGenerator jwt)
+       UsuarioRepositoryPort repo,
+       PasswordHasherPort hasher,
+       JwtTokenGeneratorPort jwt)
     {
         _repo = repo;
         _hasher = hasher;
@@ -29,13 +30,21 @@ public class UsuarioService : UsuarioUseCase
 
     public async Task<UsuarioReponse> Register(RegistroUsuarioRequest request)
     {
-
         UsuarioValidators.ValidateRegister(request);
 
         var passwordHash = _hasher.Hash(request.Password);
 
         var usuario = UsuarioMapper.ToRegisterModel(request, passwordHash);
+
         var usuarioRegistrado = await _repo.AddAsync(usuario);
+
+        Console.WriteLine("=== USUARIO REGISTRADO ===");
+        Console.WriteLine($"Id: {usuarioRegistrado.Id}");
+        Console.WriteLine($"Username: {usuarioRegistrado.Username}");
+        Console.WriteLine($"Email: {usuarioRegistrado.Email}");
+        Console.WriteLine($"Password presente: {!string.IsNullOrWhiteSpace(usuarioRegistrado.Password)}");
+        Console.WriteLine($"Longitud del hash: {usuarioRegistrado.Password?.Length ?? 0}");
+        Console.WriteLine("==========================");
 
         return UsuarioMapper.ToResponse(usuarioRegistrado);
     }

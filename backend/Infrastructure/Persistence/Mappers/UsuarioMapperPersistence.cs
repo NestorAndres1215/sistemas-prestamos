@@ -6,6 +6,7 @@ namespace Infrastructure.Persistence.Mappers;
 
 internal static class UsuarioMapperPersistence
 {
+
     public static UsuarioModel ToModel(UsuarioEntity entity)
     {
         return new UsuarioModel
@@ -13,11 +14,13 @@ internal static class UsuarioMapperPersistence
             Id = entity.Id,
             Username = entity.Username,
             Email = entity.Email,
+            Password = entity.Password,
             Activo = entity.Activo,
             FechaCreacion = entity.FechaCreacion,
             FechaActualizacion = entity.FechaActualizacion
         };
     }
+
 
     public static UsuarioEntity ToEntity(UsuarioModel model)
     {

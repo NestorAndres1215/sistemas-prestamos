@@ -36,4 +36,13 @@ public class AuthController : Controller
         return Ok(result);
     }
 
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdatePassword(
+        int id,[FromBody] PasswordRequest dto)
+    {
+        var result = await _usecase.UpdatePassword(id, dto);
+
+        return Ok(result);
+    }
+
 }

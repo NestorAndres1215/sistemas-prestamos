@@ -1,46 +1,90 @@
 using System.Security.Claims;
+using Application.Common.Exceptions;
 using Application.DTOs.Auth;
 using Application.DTOs.Usuario;
+using Application.Mappers;
+using Application.Models;
 using Application.Ports.Inbound;
 using Application.Ports.Outbound;
+using Application.Ports.Outbound.Repositories;
+using Application.Validators;
+using Domain.Constants;
 using Domain.Entities;
 
 namespace Application.Features.Auth.Services;
 
 public class AuthService : AuthUseCase
 {
-    private readonly IUsuarioRepository _repo;
-    private readonly IPasswordHasher _hasher;
-    private readonly IJwtTokenGenerator _jwt;
+    private readonly UsuarioRepositoryPort _repo;
+    private readonly PasswordHasherPort _hasher;
+    private readonly JwtTokenGeneratorPort _jwt;
 
     public AuthService(
-        IUsuarioRepository repo,
-        IPasswordHasher hasher,
-        IJwtTokenGenerator jwt)
+        UsuarioRepositoryPort repo,
+        PasswordHasherPort hasher,
+        JwtTokenGeneratorPort jwt)
     {
         _repo = repo;
         _hasher = hasher;
         _jwt = jwt;
     }
 
-    public Task<UsuarioReponse?> GetCurrentUserFromClaims(ClaimsPrincipal user)
+    public async Task<UsuarioReponse?> GetCurrentUserFromClaims(
+        ClaimsPrincipal user)
     {
-        throw new NotImplementedException();
+        var id = AuthValidators.ValidateUserIdFromClaims(user);
+
+        var usuario = await GetUserByIdAsync(id);
+
+        return UsuarioMapper.ToResponse(usuario);
     }
 
-    public Task<AuthResponse> Login(LoginRequest dto)
+    public async Task<AuthResponse> Login(LoginRequest dto)
     {
-        throw new NotImplementedException();
+        var user = await GetUserByEmailAsync(dto.Email);
+
+        var passwordValida = _hasher.Verify(
+            dto.Password,
+            user.Password);
+
+        Console.WriteLine($"Hash presente: {!string.IsNullOrWhiteSpace(user.Password)}");
+        Console.WriteLine($"Longitud del hash: {user.Password?.Length ?? 0}");
+        Console.WriteLine($"Contraseña válida: {passwordValida}");
+
+        if (!passwordValida)
+        {
+            throw new BadRequestException("Contraseña incorrecta.");
+        }
+
+        var token = _jwt.GenerateToken(user.Id, user.Email);
+
+        return AuthMapper.ToResponse(user, token);
     }
 
-    public Task<UsuarioEntity> Register(RegistroUsuarioRequest dto)
+    public async Task<UsuarioModel> UpdatePassword(int id, PasswordRequest dto)
     {
-        throw new NotImplementedException();
+        var usuario = await GetUserByIdAsync(id);
+
+        if (!_hasher.Verify(dto.PasswordActual, usuario.Password))
+        {
+            throw new UnauthorizedException("Credenciales inválidas.");
+        }
+
+        usuario.Password = _hasher.Hash(dto.PasswordNueva);
+
+        return await _repo.UpdateAsync(usuario);
     }
 
-    public Task<UsuarioEntity> UpdatePassword(int id, PasswordRequest dto)
+    private async Task<UsuarioModel> GetUserByEmailAsync(string email)
     {
-        throw new NotImplementedException();
+        return await _repo.GetByEmailAsync(email)
+            ?? throw new NotFoundException("Correo no existe.");
+    }
+
+    private async Task<UsuarioModel> GetUserByIdAsync(int id)
+    {
+        return await _repo.GetByIdAsync(id)
+            ?? throw new NotFoundException("Usuario no encontrado.");
     }
 
 }

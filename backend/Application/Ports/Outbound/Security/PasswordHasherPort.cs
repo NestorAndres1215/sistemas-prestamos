@@ -1,7 +1,7 @@
 
 namespace Application.Ports.Outbound;
 
-public interface IPasswordHasher
+public interface PasswordHasherPort
 {
     string Hash(string password);
     bool Verify(string password, string hash);

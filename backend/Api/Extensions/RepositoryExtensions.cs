@@ -1,5 +1,4 @@
-
-using Application.Ports.Outbound;
+using Application.Ports.Outbound.Repositories;
 using Infrastructure.Persistence.Adapters;
 using Infrastructure.Persistence.Queries;
 using Infrastructure.Persistence.Repositories;
@@ -15,7 +14,7 @@ public static class RepositoryExtensions
         //USUARIOS
         services.AddScoped<UsuarioRepository>();
         services.AddScoped<UsuarioQueries>();
-        services.AddScoped<IUsuarioRepository, UsuarioRepositoryAdapter>();
+        services.AddScoped<UsuarioRepositoryPort, UsuarioRepositoryAdapter>();
 
         return services;
     }

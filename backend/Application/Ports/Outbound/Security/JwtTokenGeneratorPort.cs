@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Application.Ports.Outbound;
 
-public interface IJwtTokenGenerator
+public interface JwtTokenGeneratorPort
 {
-    string GenerateToken(int userId, string email, string role);
+    string GenerateToken(int userId, string email);
 }

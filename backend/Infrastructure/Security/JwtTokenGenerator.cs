@@ -8,7 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure.Auth;
 
-public class JwtTokenGenerator : IJwtTokenGenerator
+public class JwtTokenGenerator : JwtTokenGeneratorPort
 {
     private readonly JwtSettings _settings;
 
@@ -17,13 +17,12 @@ public class JwtTokenGenerator : IJwtTokenGenerator
         _settings = options.Value;
     }
 
-    public string GenerateToken(int userId, string email, string role)
+    public string GenerateToken(int userId, string email)
     {
         var claims = new[]
         {
             new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
-            new Claim(ClaimTypes.Email, email),
-            new Claim(ClaimTypes.Role, role)
+            new Claim(ClaimTypes.Email, email),    
         };
 
         var key = new SymmetricSecurityKey(
